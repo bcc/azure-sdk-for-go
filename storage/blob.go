@@ -972,6 +972,14 @@ func (b BlobStorageClient) CopyBlob(container, name, sourceBlob string) error {
 	return b.waitForBlobCopy(container, name, copyID)
 }
 
+// AsyncCopyBlob starts a background blob copy operation and returns the copy ID. It
+// does not wait for completion of the file copy.
+func (b BlobStorageClient) AsyncCopyBlob(container, name, sourceBlob string) (string, error) {
+	copyID, err := b.startBlobCopy(container, name, sourceBlob)
+
+	return copyID, err
+}
+
 func (b BlobStorageClient) startBlobCopy(container, name, sourceBlob string) (string, error) {
 	uri := b.client.getEndpoint(blobServiceName, pathForBlob(container, name), url.Values{})
 
