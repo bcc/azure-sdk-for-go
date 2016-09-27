@@ -983,6 +983,7 @@ func (b BlobStorageClient) startBlobCopy(container, name, sourceBlob string) (st
 		return "", err
 	}
 	defer resp.body.Close()
+	io.Copy(ioutil.Discard, resp.body)
 
 	if err := checkRespCode(resp.statusCode, []int{http.StatusAccepted, http.StatusCreated}); err != nil {
 		return "", err
