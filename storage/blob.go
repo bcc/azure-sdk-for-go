@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -639,6 +640,7 @@ func (b BlobStorageClient) SetBlobProperties(container, name string, blobHeaders
 	if err != nil {
 		return err
 	}
+	io.Copy(ioutil.Discard, resp.body)
 	defer resp.body.Close()
 
 	return checkRespCode(resp.statusCode, []int{http.StatusOK})
@@ -747,6 +749,7 @@ func (b BlobStorageClient) CreateBlockBlobFromReader(container, name string, siz
 	if err != nil {
 		return err
 	}
+	io.Copy(ioutil.Discard, resp.body)
 	defer resp.body.Close()
 	return checkRespCode(resp.statusCode, []int{http.StatusCreated})
 }
@@ -980,6 +983,7 @@ func (b BlobStorageClient) startBlobCopy(container, name, sourceBlob string) (st
 		return "", err
 	}
 	defer resp.body.Close()
+	io.Copy(ioutil.Discard, resp.body)
 
 	if err := checkRespCode(resp.statusCode, []int{http.StatusAccepted, http.StatusCreated}); err != nil {
 		return "", err
